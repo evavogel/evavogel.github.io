@@ -217,6 +217,9 @@
       color: var(--muted);
     }
 
+    /* ── Vogel easter egg ── */
+    .vogel-trigger { cursor: default; }
+
     /* ── Responsive ── */
     @media (max-width: 580px) {
       #about .about-inner { flex-direction: column; align-items: center; text-align: center; }
@@ -243,7 +246,7 @@
       <img src="photo.jpg" alt="Eva-Maria Vogel" onerror="this.style.display='none'">
     </div>
     <div class="about-text">
-      <h1>Eva-Maria Vogel</h1>
+      <h1>Eva-Maria <span class="vogel-trigger">Vogel</span></h1>
       <p class="role">PhD Candidate · Department of Communication and Media Research (IKMZ) · University of Zurich</p>
       <p>
         Eva-Maria Vogel is a doctoral researcher whose work explores the societal impact of political social media influencers on youth political engagement across platforms. As part of a comparative project spanning the US, Germany, and Poland, she uses computational methods to examine how digital influencers shape political communication and mobilization. With a background in political psychology and science communication, her research sits at the intersection of technology, credibility, and public discourse.
@@ -340,5 +343,75 @@
   Eva-Maria Vogel · University of Zurich · <a href="mailto:eva-maria.vogel@ikmz.uzh.ch">eva-maria.vogel@ikmz.uzh.ch</a>
 </footer>
 
+<script>
+(function () {
+  const trigger = document.querySelector('.vogel-trigger');
+  if (!trigger) return;
+  let cooling = false;
+
+  trigger.addEventListener('mouseenter', function () {
+    if (cooling) return;
+    cooling = true;
+    setTimeout(() => cooling = false, 800);
+
+    const rect = trigger.getBoundingClientRect();
+    const count = 7 + Math.floor(Math.random() * 4);
+    for (let i = 0; i < count; i++) spawnBird(rect);
+  });
+
+  function spawnBird(rect) {
+    const ns = 'http://www.w3.org/2000/svg';
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'position:fixed;pointer-events:none;z-index:9999;';
+
+    const startX = rect.left + Math.random() * rect.width;
+    const startY = rect.top + rect.height * 0.5;
+    wrap.style.left = startX + 'px';
+    wrap.style.top  = startY + 'px';
+
+    const svg  = document.createElementNS(ns, 'svg');
+    const size = 12 + Math.random() * 8;
+    svg.setAttribute('viewBox', '0 0 20 10');
+    svg.setAttribute('width',  size);
+    svg.setAttribute('height', size / 2);
+
+    const path = document.createElementNS(ns, 'path');
+    path.setAttribute('fill', 'none');
+    path.setAttribute('stroke', '#0028A5');
+    path.setAttribute('stroke-width', '2');
+    path.setAttribute('stroke-linecap', 'round');
+    path.setAttribute('d', 'M0,6 Q5,0 10,6 Q15,0 20,6');
+
+    const anim = document.createElementNS(ns, 'animate');
+    anim.setAttribute('attributeName', 'd');
+    anim.setAttribute('values',
+      'M0,6 Q5,0 10,6 Q15,0 20,6;' +
+      'M0,4 Q5,5 10,4 Q15,5 20,4;' +
+      'M0,6 Q5,0 10,6 Q15,0 20,6');
+    anim.setAttribute('dur', (0.2 + Math.random() * 0.15) + 's');
+    anim.setAttribute('repeatCount', 'indefinite');
+
+    path.appendChild(anim);
+    svg.appendChild(path);
+    wrap.appendChild(svg);
+    document.body.appendChild(wrap);
+
+    const angle = (-165 + Math.random() * 150) * Math.PI / 180;
+    const dist  = 100 + Math.random() * 140;
+    const dx = Math.cos(angle) * dist;
+    const dy = Math.sin(angle) * dist;
+
+    wrap.animate([
+      { opacity: 1, transform: 'translate(0,0) scale(1)' },
+      { opacity: 0, transform: `translate(${dx}px,${dy}px) scale(0.3)` }
+    ], {
+      duration: 800 + Math.random() * 500,
+      delay:    Math.random() * 250,
+      easing:   'ease-out',
+      fill:     'forwards'
+    }).onfinish = () => wrap.remove();
+  }
+})();
+</script>
 </body>
 </html>
