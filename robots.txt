@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://evavogel.github.io/sitemap.xml
+Sitemap: https://emvogel.com/sitemap.xml
