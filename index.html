@@ -122,19 +122,39 @@
       gap: 2.5rem;
       align-items: flex-start;
     }
-    .photo-wrap {
+    .photo-flip {
       flex-shrink: 0;
       width: 140px;
       height: 140px;
+      perspective: 600px;
+      cursor: default;
+    }
+    .photo-flip-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.55s ease;
+      transform-style: preserve-3d;
+    }
+    .photo-flip:hover .photo-flip-inner {
+      transform: rotateY(180deg);
+    }
+    .photo-flip-front,
+    .photo-flip-back {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
       border-radius: 50%;
       overflow: hidden;
       border: 3px solid var(--blue);
       background: var(--blue-light);
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
-    .photo-wrap img {
+    .photo-flip-back {
+      transform: rotateY(180deg);
+    }
+    .photo-flip-front img,
+    .photo-flip-back img {
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -283,9 +303,15 @@
 <!-- ── About ── -->
 <section id="about">
   <div class="about-inner">
-    <div class="photo-wrap">
-      <!-- Replace photo.jpg with your own image file in this folder -->
-      <img src="photo.jpg" alt="Eva-Maria Vogel" onerror="this.style.display='none'">
+    <div class="photo-flip">
+      <div class="photo-flip-inner">
+        <div class="photo-flip-front">
+          <img src="photo.jpg" alt="Eva-Maria Vogel">
+        </div>
+        <div class="photo-flip-back">
+          <img src="fun-photo.JPG" alt="Eva-Maria Vogel">
+        </div>
+      </div>
     </div>
     <div class="about-text">
       <h1>Eva-Maria <span class="vogel-trigger">Vogel</span></h1>
